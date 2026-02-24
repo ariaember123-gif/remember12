@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$REMEMBER WHO YOU ARE | Memecoin on Solana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+    --primary:#7dd3fc; --secondary:#38bdf8; --accent:#0ea5e9;
+    --dark:#0c1821; --darker:#050a0f;
+    --mist:rgba(125,211,252,0.08); --glow:rgba(125,211,252,0.3);
+    --orange:#f97316; --og:rgba(249,115,22,0.35); --om:rgba(249,115,22,0.07);
+    --red:#ef4444; --green:#4ade80;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Cormorant Garamond',serif;background:var(--darker);color:#e0f2fe;overflow-x:hidden;line-height:1.7;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--darker);}
+::-webkit-scrollbar-thumb{background:rgba(125,211,252,0.25);border-radius:3px;}
+::selection{background:rgba(125,211,252,0.2);color:#fff;}
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav{
+    position:fixed;top:0;left:0;right:0;z-index:9999;
+    height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;
+    background:rgba(5,10,15,0.85);backdrop-filter:blur(24px) saturate(1.5);
+    border-bottom:1px solid rgba(125,211,252,0.08);transition:background .4s,border-color .4s;
+}
+nav.scrolled{background:rgba(5,10,15,0.97);border-bottom-color:rgba(125,211,252,0.18);}
+.nav-logo{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:900;letter-spacing:.12em;text-decoration:none;
+    background:linear-gradient(135deg,#bae6fd,var(--primary),var(--secondary));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-links{display:flex;gap:0;list-style:none;align-items:center;}
+.nav-links a{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;
+    color:rgba(125,211,252,.55);text-decoration:none;padding:.5rem .85rem;transition:color .3s;white-space:nowrap;}
+.nav-links a:hover{color:var(--primary);}
+.nav-links a.njuice{color:var(--orange);border:1px solid rgba(249,115,22,.3);margin-left:.5rem;padding:.4rem .8rem;transition:all .3s;}
+.nav-links a.njuice:hover{background:var(--om);box-shadow:0 0 20px var(--og);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--primary);transition:all .3s;}
+.mmenu{display:none;position:fixed;top:68px;left:0;right:0;z-index:9998;
+    background:rgba(5,10,15,.98);backdrop-filter:blur(24px);
+    border-bottom:1px solid rgba(125,211,252,.1);flex-direction:column;padding:1.5rem 2rem 2rem;}
+.mmenu.open{display:flex;}
+.mmenu a{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;
+    color:rgba(125,211,252,.7);text-decoration:none;padding:.9rem 0;
+    border-bottom:1px solid rgba(125,211,252,.07);transition:color .3s;}
+.mmenu a:hover{color:var(--primary);}
+.mmenu a.mj{color:var(--orange);}
+@media(max-width:960px){.nav-links{display:none;}.hamburger{display:flex;}nav{padding:0 1.5rem;}}
+
+/* ═══════════════════════════════════════════
+   HERO — VIDEO BG
+═══════════════════════════════════════════ */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.hero-ov1{position:absolute;inset:0;z-index:1;
+    background:linear-gradient(to bottom,rgba(5,10,15,.18) 0%,rgba(5,10,15,.5) 45%,rgba(5,10,15,.9) 80%,rgba(5,10,15,.99) 100%);}
+.hero-ov2{position:absolute;inset:0;z-index:1;
+    background:radial-gradient(ellipse at 50% 50%,rgba(125,211,252,.04) 0%,transparent 70%);}
+.hero-content{position:relative;z-index:2;text-align:center;padding:2rem;max-width:1100px;animation:fadeInUp 1.4s ease-out both;}
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.5em;text-transform:uppercase;
+    color:rgba(125,211,252,.4);margin-bottom:1.5rem;animation:fadeIn 1s ease-out .4s both;}
+.logo{font-family:'Cinzel',serif;font-size:clamp(3rem,10vw,7.5rem);font-weight:900;letter-spacing:.04em;
+    text-transform:uppercase;margin-bottom:.4rem;
+    background:linear-gradient(135deg,#bae6fd 0%,var(--primary) 40%,var(--secondary) 70%,#bae6fd 100%);
+    background-size:300% 300%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    animation:shimmer 5s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(125,211,252,.5));}
+.tagline{font-size:clamp(1.3rem,3.5vw,2.2rem);font-weight:300;letter-spacing:.25em;margin-bottom:2rem;
+    color:rgba(125,211,252,.9);text-shadow:0 0 30px var(--glow);font-style:italic;animation:fadeIn 1.5s ease-out .6s both;}
+.hero-badges{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem;animation:fadeIn 1.5s ease-out .8s both;}
+.badge{font-family:'Cinzel',serif;font-size:.64rem;letter-spacing:.18em;padding:.5rem 1.1rem;
+    border:1px solid rgba(125,211,252,.2);background:rgba(125,211,252,.05);color:rgba(125,211,252,.65);backdrop-filter:blur(10px);}
+.badge.jb{border-color:rgba(249,115,22,.35);background:var(--om);color:var(--orange);}
+.cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeIn 2s ease-out 1s both;}
+
+/* BUTTONS */
+.btn{padding:1rem 2.4rem;font-family:'Cinzel',serif;font-size:.8rem;font-weight:600;letter-spacing:.16em;
+    text-transform:uppercase;border:1px solid var(--primary);background:rgba(125,211,252,.07);color:var(--primary);
+    cursor:pointer;position:relative;overflow:hidden;transition:all .35s;backdrop-filter:blur(10px);
+    text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;}
+.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+    background:linear-gradient(90deg,transparent,rgba(125,211,252,.18),transparent);transition:left .5s ease;}
+.btn:hover::before{left:100%;}
+.btn:hover{background:var(--primary);color:var(--darker);box-shadow:0 0 35px var(--glow);transform:translateY(-2px);}
+.btn-ghost{background:transparent;border-color:rgba(125,211,252,.3);}
+.btn-ghost:hover{background:var(--primary);color:var(--darker);}
+.btn-x{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.04);color:rgba(255,255,255,.85);}
+.btn-x:hover{background:#000;color:#fff;border-color:#fff;box-shadow:0 0 25px rgba(255,255,255,.15);transform:translateY(-2px);}
+.btn-orange{border-color:var(--orange);background:var(--om);color:var(--orange);}
+.btn-orange:hover{background:var(--orange);color:#fff;box-shadow:0 0 35px var(--og);transform:translateY(-2px);}
+.btn-sm{padding:.65rem 1.5rem;font-size:.7rem;}
+.btn-red{border-color:rgba(239,68,68,.3);color:rgba(239,68,68,.7);background:transparent;}
+.btn-red:hover{background:#ef4444;color:#fff;border-color:#ef4444;transform:translateY(-2px);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;}
+
+.scroll-ind{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:3;animation:scrollBounce 2s ease-in-out infinite;}
+.scroll-ind svg{width:28px;height:28px;opacity:.4;}
+
+/* ═══════════════════════════════════════════
+   SECTIONS
+═══════════════════════════════════════════ */
+.section{padding:7rem 2rem;position:relative;}
+.sa{background:linear-gradient(180deg,var(--darker) 0%,#080f18 100%);}
+.sm{background:linear-gradient(180deg,#070d16 0%,var(--darker) 100%);}
+.sj{background:linear-gradient(180deg,#050a0f 0%,#080d09 60%,#050a0f 100%);}
+.section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent 0%,rgba(125,211,252,.18) 50%,transparent 100%);}
+.sj::before{background:linear-gradient(90deg,transparent 0%,rgba(249,115,22,.25) 50%,transparent 100%);}
+.container{max-width:1200px;margin:0 auto;}
+.sec-hd{text-align:center;margin-bottom:4.5rem;}
+.sec-lbl{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.45em;text-transform:uppercase;
+    color:rgba(125,211,252,.35);margin-bottom:.9rem;}
+.sec-lbl.ol{color:rgba(249,115,22,.5);}
+.sec-title{font-family:'Cinzel',serif;font-size:clamp(2rem,4.5vw,3.5rem);font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;}
+.sec-title.ot{background:linear-gradient(135deg,var(--orange),#fb923c);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.sec-sub{font-size:1.15rem;color:rgba(125,211,252,.5);line-height:1.8;}
+
+/* ═══════════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════════ */
+.about-body{font-size:1.25rem;line-height:2.1;color:rgba(224,242,254,.78);max-width:820px;margin:0 auto;text-align:center;}
+.about-body p{margin-bottom:1.8rem;}
+.about-body p:last-child{margin-bottom:0;}
+.ca-block{margin:3.5rem auto 0;padding:2.2rem 2.5rem;background:rgba(125,211,252,.03);
+    border:1px solid rgba(125,211,252,.12);text-align:center;max-width:720px;position:relative;overflow:hidden;}
+.ca-block::before{content:'';position:absolute;top:0;left:-100%;width:60%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--primary),transparent);animation:scanline 4s linear infinite;}
+.ca-lbl{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;
+    color:rgba(125,211,252,.35);margin-bottom:1rem;}
+.ca-addr{font-family:'Courier New',monospace;font-size:clamp(.7rem,1.6vw,.92rem);color:var(--primary);
+    letter-spacing:.04em;word-break:break-all;cursor:pointer;padding:.9rem 1.4rem;
+    background:rgba(125,211,252,.04);border:1px solid rgba(125,211,252,.1);
+    display:inline-block;transition:all .3s;margin-bottom:.8rem;user-select:all;}
+.ca-addr:hover{background:rgba(125,211,252,.08);box-shadow:0 0 25px var(--glow);}
+.ca-hint{font-size:.78rem;color:rgba(125,211,252,.3);letter-spacing:.12em;}
+.ca-ok{font-size:.78rem;color:var(--green);letter-spacing:.12em;display:none;}
+
+/* ═══════════════════════════════════════════
+   JUICE SECTION
+═══════════════════════════════════════════ */
+.juice-hero{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+@media(max-width:768px){.juice-hero{grid-template-columns:1fr;gap:3rem;}}
+.juice-hed{font-family:'Cinzel',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--orange);margin-bottom:1.5rem;
+    text-shadow:0 0 40px var(--og);}
+.juice-text p{font-size:1.2rem;line-height:1.95;color:rgba(224,242,254,.75);margin-bottom:1.4rem;}
+.juice-text p strong{color:var(--orange);font-style:italic;}
+.juice-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2rem;}
+.jstat{background:var(--om);border:1px solid rgba(249,115,22,.2);padding:1.5rem 1.2rem;text-align:center;transition:all .3s;}
+.jstat:hover{border-color:var(--orange);box-shadow:0 0 25px var(--og);transform:translateY(-4px);}
+.jstat-val{font-family:'Cinzel',serif;font-size:2rem;font-weight:700;color:var(--orange);margin-bottom:.3rem;}
+.jstat-lbl{font-size:.76rem;letter-spacing:.12em;color:rgba(249,115,22,.55);text-transform:uppercase;}
+.juice-visual{display:flex;align-items:center;justify-content:center;}
+.burn-orb{width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle at 40% 35%,rgba(249,115,22,.2) 0%,rgba(239,68,68,.1) 40%,transparent 70%);
+    border:1px solid rgba(249,115,22,.2);display:flex;align-items:center;justify-content:center;
+    animation:burnPulse 3s ease-in-out infinite;position:relative;overflow:visible;
+    box-shadow:0 0 80px rgba(249,115,22,.1),inset 0 0 60px rgba(249,115,22,.05);}
+.burn-inner{font-size:5rem;position:relative;z-index:2;filter:drop-shadow(0 0 20px var(--orange));animation:floatOrb 4s ease-in-out infinite;}
+.burn-ring{position:absolute;border-radius:50%;border:1px solid rgba(249,115,22,.15);width:100%;height:100%;animation:ringExpand 3s ease-out infinite;}
+.burn-ring:nth-child(2){animation-delay:1s;} .burn-ring:nth-child(3){animation-delay:2s;}
+.jlinkbar{margin-top:3rem;padding:1.5rem 2rem;background:var(--om);border:1px solid rgba(249,115,22,.25);
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.jlinkbar p{font-size:1rem;color:rgba(224,242,254,.7);}
+.jlinkbar p strong{color:var(--orange);}
+.burn-ticker{display:flex;align-items:center;gap:2rem;padding:1.2rem 2rem;
+    background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.18);margin-top:2rem;flex-wrap:wrap;justify-content:center;}
+.bt-item{text-align:center;}
+.bt-val{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--red);font-weight:700;}
+.bt-lbl{font-size:.7rem;letter-spacing:.15em;color:rgba(239,68,68,.45);text-transform:uppercase;}
+.flame{font-size:1.6rem;animation:burnFlicker .8s ease-in-out infinite alternate;}
+
+/* ═══════════════════════════════════════════
+   TOKENOMICS
+═══════════════════════════════════════════ */
+.tok-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.5rem;}
+.tok-card{background:rgba(125,211,252,.04);border:1px solid rgba(125,211,252,.15);
+    padding:2.8rem 2rem;text-align:center;position:relative;overflow:hidden;transition:all .35s;backdrop-filter:blur(10px);}
+.tok-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--primary),transparent);transform:scaleX(0);transition:transform .35s;}
+.tok-card:hover::after{transform:scaleX(1);}
+.tok-card:hover{transform:translateY(-10px);border-color:rgba(125,211,252,.4);box-shadow:0 20px 50px rgba(125,211,252,.07);}
+.tok-icon{font-size:2.8rem;margin-bottom:1.4rem;filter:drop-shadow(0 0 10px var(--primary));}
+.tok-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;margin-bottom:.8rem;color:var(--primary);letter-spacing:.12em;text-transform:uppercase;}
+.tok-val{font-size:1.4rem;font-weight:600;color:rgba(224,242,254,.9);}
+
+/* ═══════════════════════════════════════════
+   ROADMAP
+═══════════════════════════════════════════ */
+.rm-wrap{position:relative;padding:2rem 0;}
+.rm-wrap::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;
+    background:linear-gradient(to bottom,var(--primary),transparent);transform:translateX(-50%);}
+.rm-item{display:flex;justify-content:space-between;margin-bottom:4rem;position:relative;}
+.rm-item:nth-child(even){flex-direction:row-reverse;}
+.rm-card{width:44%;background:rgba(125,211,252,.03);border:1px solid rgba(125,211,252,.14);
+    padding:2rem;backdrop-filter:blur(10px);transition:all .3s;}
+.rm-card:hover{border-color:rgba(125,211,252,.3);box-shadow:0 0 30px rgba(125,211,252,.05);}
+.rm-dot{position:absolute;left:50%;top:2rem;width:14px;height:14px;background:var(--primary);
+    border-radius:50%;transform:translateX(-50%);box-shadow:0 0 20px var(--glow);z-index:2;}
+.rm-phase{font-family:'Cinzel',serif;font-size:1.35rem;font-weight:600;color:var(--primary);margin-bottom:1rem;letter-spacing:.1em;}
+.rm-card ul{list-style:none;padding:0;}
+.rm-card li{padding:.4rem 0 .4rem 1.5rem;position:relative;font-size:1.05rem;color:rgba(224,242,254,.72);}
+.rm-card li::before{content:'◆';position:absolute;left:0;color:var(--primary);font-size:.55rem;top:.75rem;}
+@media(max-width:768px){
+    .rm-wrap::before{left:16px;}
+    .rm-item,.rm-item:nth-child(even){flex-direction:column;}
+    .rm-card{width:100%;margin-left:50px;}
+    .rm-dot{left:16px;}
+}
+
+/* ═══════════════════════════════════════════
+   AI MEME GENERATOR
+═══════════════════════════════════════════ */
+.meme-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+@media(max-width:900px){.meme-grid{grid-template-columns:1fr;}}
+.meme-panel{background:rgba(125,211,252,.03);border:1px solid rgba(125,211,252,.12);padding:2.5rem;position:relative;overflow:hidden;}
+.meme-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--primary),transparent);}
+.flabel{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.28em;text-transform:uppercase;
+    color:rgba(125,211,252,.45);display:block;margin-bottom:.6rem;margin-top:1.2rem;}
+.flabel:first-child{margin-top:0;}
+.ftxt,.finput,.fsel{width:100%;background:rgba(125,211,252,.04);border:1px solid rgba(125,211,252,.18);
+    color:#e0f2fe;padding:.9rem 1.1rem;font-family:'Cormorant Garamond',serif;font-size:1.1rem;
+    outline:none;transition:border-color .3s,box-shadow .3s;}
+.ftxt:focus,.finput:focus,.fsel:focus{border-color:var(--primary);box-shadow:0 0 20px rgba(125,211,252,.08);}
+.fsel option{background:#0c1821;}
+.ftxt{height:105px;resize:vertical;}
+.style-pills{display:flex;gap:.5rem;flex-wrap:wrap;}
+.spill{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.12em;padding:.4rem .9rem;
+    border:1px solid rgba(125,211,252,.2);background:transparent;color:rgba(125,211,252,.45);
+    cursor:pointer;transition:all .25s;text-transform:uppercase;}
+.spill:hover,.spill.on{border-color:var(--primary);color:var(--primary);background:rgba(125,211,252,.08);}
+.meme-btns{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.5rem;}
+/* preview panel */
+.meme-preview{background:rgba(125,211,252,.02);border:1px solid rgba(125,211,252,.12);
+    padding:2rem;min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.meme-ph{text-align:center;color:rgba(125,211,252,.22);}
+.meme-ph-icon{font-size:4rem;margin-bottom:1rem;filter:grayscale(1) opacity(.4);}
+.meme-ph-txt{font-size:1rem;letter-spacing:.08em;}
+#memeImg{max-width:100%;max-height:420px;display:none;border:1px solid rgba(125,211,252,.15);}
+.meme-actions{display:none;gap:.8rem;margin-top:1.2rem;flex-wrap:wrap;justify-content:center;}
+.meme-loading{text-align:center;display:none;flex-direction:column;align-items:center;gap:1rem;}
+.spinner{width:50px;height:50px;border:2px solid rgba(125,211,252,.15);border-top-color:var(--primary);border-radius:50%;animation:spin .9s linear infinite;}
+.spin-lbl{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.2em;color:var(--primary);}
+.meme-err{color:#f87171;font-size:.9rem;text-align:center;padding:1rem;display:none;line-height:1.6;}
+.server-note{background:rgba(125,211,252,.03);border:1px solid rgba(125,211,252,.09);
+    padding:1rem 1.2rem;margin-top:1.2rem;font-size:.88rem;color:rgba(125,211,252,.45);line-height:1.7;}
+.server-note strong{color:var(--primary);}
+
+/* ═══════════════════════════════════════════
+   VAULT
+═══════════════════════════════════════════ */
+.vault-stats{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;}
+.vstat{background:rgba(125,211,252,.04);border:1px solid rgba(125,211,252,.12);padding:1.2rem 2rem;text-align:center;min-width:140px;}
+.vstat-val{font-family:'Cinzel',serif;font-size:2rem;font-weight:700;color:var(--primary);}
+.vstat-lbl{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(125,211,252,.38);}
+.vault-ctrl{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;margin-bottom:2.5rem;justify-content:center;}
+.vsearch{flex:1;min-width:200px;max-width:340px;background:rgba(125,211,252,.04);
+    border:1px solid rgba(125,211,252,.18);color:#e0f2fe;padding:.7rem 1.1rem;
+    font-family:'Cormorant Garamond',serif;font-size:1rem;outline:none;transition:border-color .3s;}
+.vsearch:focus{border-color:var(--primary);}
+.vault-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.5rem;}
+.vcard{background:rgba(125,211,252,.03);border:1px solid rgba(125,211,252,.1);overflow:hidden;transition:all .3s;}
+.vcard:hover{border-color:rgba(125,211,252,.3);transform:translateY(-5px);box-shadow:0 15px 40px rgba(125,211,252,.06);}
+.vcard img{width:100%;display:block;aspect-ratio:1;object-fit:cover;}
+.vcard-body{padding:1rem 1.1rem;}
+.vcard-prompt{font-size:.88rem;color:rgba(224,242,254,.62);margin-bottom:.5rem;line-height:1.5;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.vcard-meta{font-size:.7rem;color:rgba(125,211,252,.32);letter-spacing:.08em;margin-bottom:.8rem;}
+.vcard-acts{display:flex;gap:.5rem;}
+.vbtn{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+    padding:.4rem .8rem;background:transparent;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-block;}
+.vbtn-del{border:1px solid rgba(239,68,68,.25);color:rgba(239,68,68,.5);}
+.vbtn-del:hover{border-color:#ef4444;color:#ef4444;}
+.vbtn-open{border:1px solid rgba(125,211,252,.2);color:rgba(125,211,252,.5);}
+.vbtn-open:hover{border-color:var(--primary);color:var(--primary);}
+.vault-empty{text-align:center;padding:5rem 2rem;color:rgba(125,211,252,.22);font-size:1.1rem;grid-column:1/-1;}
+.vault-empty-icon{font-size:3rem;margin-bottom:1rem;}
+
+/* ═══════════════════════════════════════════
+   LORE TABS
+═══════════════════════════════════════════ */
+.lore-tabs{display:flex;gap:0;border-bottom:1px solid rgba(125,211,252,.14);margin-bottom:3.5rem;flex-wrap:wrap;}
+.ltab{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+    padding:1rem 1.8rem;border:none;background:transparent;color:rgba(125,211,252,.4);
+    cursor:pointer;transition:all .3s;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.ltab:hover{color:var(--primary);}
+.ltab.on{color:var(--primary);border-bottom-color:var(--primary);background:rgba(125,211,252,.04);}
+.lpanel{display:none;animation:fadeIn .5s ease-out;}
+.lpanel.on{display:block;}
+.lore{max-width:820px;margin:0 auto;font-size:1.2rem;line-height:2.1;color:rgba(224,242,254,.76);}
+.lore h3{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--primary);letter-spacing:.1em;
+    margin-bottom:1.2rem;margin-top:2.5rem;text-transform:uppercase;}
+.lore h3:first-child{margin-top:0;}
+.lore p{margin-bottom:1.5rem;}
+.pullq{border-left:2px solid var(--primary);padding:1rem 1.5rem;background:rgba(125,211,252,.04);
+    margin:2rem 0;font-style:italic;font-size:1.4rem;color:var(--primary);}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:1.2rem;margin:2rem 0;}
+.fact{background:rgba(125,211,252,.04);border:1px solid rgba(125,211,252,.12);padding:1.5rem;text-align:center;}
+.fact-v{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--primary);margin-bottom:.3rem;}
+.fact-k{font-size:.74rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(125,211,252,.38);}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:1.5rem;}
+.how-step{background:rgba(125,211,252,.03);border:1px solid rgba(125,211,252,.1);padding:2rem 1.5rem;text-align:center;transition:all .3s;}
+.how-step:hover{border-color:var(--primary);transform:translateY(-6px);box-shadow:0 15px 35px rgba(125,211,252,.06);}
+.how-n{font-family:'Cinzel',serif;font-size:2.5rem;font-weight:900;color:rgba(125,211,252,.12);margin-bottom:.8rem;}
+.how-t{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.15em;text-transform:uppercase;color:var(--primary);margin-bottom:.8rem;}
+.how-d{font-size:.98rem;color:rgba(224,242,254,.58);line-height:1.7;}
+.faq-item{background:rgba(125,211,252,.03);border:1px solid rgba(125,211,252,.1);padding:1.5rem;margin-bottom:1rem;}
+.faq-q{color:var(--primary);font-family:'Cinzel',serif;margin-bottom:.6rem;font-size:.95rem;letter-spacing:.06em;}
+.faq-a{color:rgba(224,242,254,.68);font-size:1rem;line-height:1.7;}
+
+/* ═══════════════════════════════════════════
+   COMMUNITY
+═══════════════════════════════════════════ */
+.soc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.5rem;}
+.soc-link{display:flex;flex-direction:column;align-items:center;gap:.9rem;padding:2.5rem 1.5rem;
+    background:rgba(125,211,252,.04);border:1px solid rgba(125,211,252,.14);text-decoration:none;
+    color:var(--primary);transition:all .3s;text-align:center;backdrop-filter:blur(10px);}
+.soc-link:hover{background:rgba(125,211,252,.09);border-color:var(--primary);transform:translateY(-6px);box-shadow:0 15px 40px rgba(125,211,252,.07);}
+.soc-link.jlink{border-color:rgba(249,115,22,.25);color:var(--orange);background:var(--om);}
+.soc-link.jlink:hover{border-color:var(--orange);box-shadow:0 15px 40px var(--og);}
+.soc-icon{font-size:2.5rem;}
+.soc-name{font-family:'Cinzel',serif;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;}
+.soc-desc{font-size:.85rem;color:rgba(125,211,252,.38);}
+.jlink .soc-desc{color:rgba(249,115,22,.45);}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer{background:var(--darker);padding:4rem 2rem 3rem;border-top:1px solid rgba(125,211,252,.1);text-align:center;}
+.ft-logo{font-family:'Cinzel',serif;font-size:1.6rem;font-weight:900;letter-spacing:.1em;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem;}
+.ft-ca{font-family:'Courier New',monospace;font-size:.75rem;color:rgba(125,211,252,.28);letter-spacing:.05em;word-break:break-all;margin-bottom:2rem;}
+.ft-links{display:flex;gap:1.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem;}
+.ft-links a{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(125,211,252,.32);text-decoration:none;transition:color .3s;}
+.ft-links a:hover{color:var(--primary);}
+.ft-disc{font-size:.8rem;color:rgba(125,211,252,.2);max-width:600px;margin:0 auto 1.5rem;line-height:1.7;}
+.ft-juice{font-size:.8rem;color:rgba(249,115,22,.32);}
+.ft-juice a{color:var(--orange);text-decoration:none;}
+.ft-juice a:hover{text-decoration:underline;}
+
+/* ═══════════════════════════════════════════
+   AMBIENT
+═══════════════════════════════════════════ */
+.particle{position:fixed;width:2px;height:2px;background:var(--primary);border-radius:50%;pointer-events:none;opacity:0;z-index:0;animation:particleFloat linear infinite;}
+.gorb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(80px);opacity:.18;width:400px;height:400px;background:radial-gradient(circle,var(--glow) 0%,transparent 70%);}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:rgba(5,10,15,.96);border:1px solid var(--primary);
+    color:var(--primary);padding:1rem 2rem;font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.15em;
+    z-index:99999;transform:translateY(120px);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+    backdrop-filter:blur(20px);max-width:320px;}
+.toast.show{transform:translateY(0);}
+.toast.terr{border-color:#ef4444;color:#ef4444;}
+.toast.tok{border-color:var(--green);color:var(--green);}
+
+/* ═══════════════════════════════════════════
+   KEYFRAMES
+═══════════════════════════════════════════ */
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes floatOrb{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes burnPulse{0%,100%{box-shadow:0 0 80px rgba(249,115,22,.1)}50%{box-shadow:0 0 120px rgba(249,115,22,.22)}}
+@keyframes ringExpand{0%{transform:scale(.95);opacity:.5}100%{transform:scale(1.5);opacity:0}}
+@keyframes burnFlicker{from{transform:scaleY(1)}to{transform:scaleY(1.1) scaleX(.96)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes scanline{0%{left:-100%}100%{left:200%}}
+@keyframes particleFloat{0%{transform:translateY(100vh);opacity:0}10%,90%{opacity:.6}50%{transform:translateY(-10vh) translateX(30px);opacity:1}100%{transform:translateY(-100vh);opacity:0}}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+</style>
+</head>
+<body>
+
+<!-- AMBIENT -->
+<div class="gorb" id="g1"></div>
+<div class="gorb" id="g2" style="background:radial-gradient(circle,rgba(249,115,22,.28) 0%,transparent 70%);opacity:.11;"></div>
+<div id="particles"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════
+     NAV
+══════════════════════════════ -->
+<nav id="nav">
+    <a href="#" class="nav-logo">$REMEMBER</a>
+    <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#juice">Juice Burn</a></li>
+        <li><a href="#tokenomics">Tokenomics</a></li>
+        <li><a href="#memes">AI Memes</a></li>
+        <li><a href="#vault">Vault</a></li>
+        <li><a href="#lore">Lore</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="https://www.drinkjuice.io/" target="_blank" class="njuice">🍊 Juice</a></li>
+    </ul>
+    <button class="hamburger" id="hbg" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mmenu" id="mm">
+    <a href="#about" class="ml">About</a>
+    <a href="#juice" class="ml">🔥 Juice Burn</a>
+    <a href="#tokenomics" class="ml">Tokenomics</a>
+    <a href="#memes" class="ml">AI Meme Generator</a>
+    <a href="#vault" class="ml">Meme Vault</a>
+    <a href="#lore" class="ml">Lore</a>
+    <a href="#community" class="ml">Community</a>
+    <a href="https://www.drinkjuice.io/" target="_blank" class="ml mj">🍊 Juice Tech</a>
+</div>
+
+<!-- ══════════════════════════════
+     HERO — VIDEO BG
+══════════════════════════════ -->
+<section class="hero" id="home">
+    <video class="hero-video" id="hv" autoplay muted loop playsinline preload="auto">
+        <source src="/もも_-_Momo__11_.mp4" type="video/mp4">
+    </video>
+    <div class="hero-ov1"></div>
+    <div class="hero-ov2"></div>
+    <div class="hero-content">
+        <p class="hero-eyebrow">Solana · Memecoin · Volume Fees Fuel Juice Burns</p>
+        <h1 class="logo">$REMEMBER</h1>
+        <p class="tagline">Who You Are</p>
+        <div class="hero-badges">
+            <span class="badge">⚡ Solana</span>
+            <span class="badge">🔒 Liquidity Locked</span>
+            <span class="badge">📜 Renounced</span>
+            <span class="badge">0% Tax</span>
+            <span class="badge jb">🍊 Juice Burn Active</span>
+        </div>
+        <div class="cta-row">
+            <a href="#about" class="btn">Discover Legacy</a>
+            <a href="https://x.com/i/communities/2025009364206322044" target="_blank" class="btn btn-x">𝕏 Join Community</a>
+            <a href="#juice" class="btn btn-orange">🔥 Burn Mechanism</a>
+        </div>
+    </div>
+    <div class="scroll-ind">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--primary)">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     ABOUT
+══════════════════════════════ -->
+<section id="about" class="section sa">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl">The Origin</p>
+            <h2 class="sec-title">The Awakening</h2>
+        </div>
+        <div class="about-body">
+            <p>In the depths of forgotten realms, where ancient giants once roamed, lies a truth waiting to be rediscovered. $REMEMBER is not just a memecoin — it's a journey back to your primal essence.</p>
+            <p>Like the majestic creature ascending through the mists of time, we rise above the noise of ordinary tokens. We are the echo of something greater: a call to those who dare to remember their true power.</p>
+            <p>Join us in this odyssey. Together, we'll carve our names into the blockchain as the ancients carved theirs into stone. This is your moment to remember who you truly are.</p>
+        </div>
+        <div class="ca-block">
+            <p class="ca-lbl">Contract Address · Solana</p>
+            <div class="ca-addr" id="ca" onclick="copyCA()" title="Click to copy">CYfwS1vQfMtJgU8woviDXKhqPPkzoNzRxrPGQiRHpump</div>
+            <p class="ca-hint" id="caHint">Click to copy</p>
+            <p class="ca-ok" id="caOk">✓ Copied to clipboard!</p>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     JUICE TECH
+══════════════════════════════ -->
+<section id="juice" class="section sj">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl ol">🍊 Juice Technology</p>
+            <h2 class="sec-title ot">Burn. Grow. Ascend.</h2>
+            <p class="sec-sub" style="color:rgba(249,115,22,.5)">Every trade makes $REMEMBER rarer. Every fee fuels the fire.</p>
+        </div>
+        <div class="juice-hero">
+            <div class="juice-text">
+                <h3 class="juice-hed">Volume → Burn → Scarcity</h3>
+                <p>$REMEMBER has forged a direct link between trading volume and token scarcity. <strong>All volume-created fees are channeled directly to Juice Tech's burn mechanism</strong> — permanently removing $REMEMBER from circulation with every single transaction.</p>
+                <p>Juice has become an essential tool allowing us to <strong>grow our community, reduce supply, and become rarer each day.</strong> The more the community trades, the more tokens are destroyed forever.</p>
+                <p>This isn't just tokenomics — it's an ancient law of nature. <strong>Scarcity creates legends.</strong> As the dinosaurs became immortal through rarity, so too shall $REMEMBER ascend through the fire.</p>
+                <div class="juice-stats">
+                    <div class="jstat"><div class="jstat-val">100%</div><div class="jstat-lbl">Fees → Burn</div></div>
+                    <div class="jstat"><div class="jstat-val">∞</div><div class="jstat-lbl">Burn Events</div></div>
+                    <div class="jstat"><div class="jstat-val">↓</div><div class="jstat-lbl">Supply Daily</div></div>
+                    <div class="jstat"><div class="jstat-val">↑</div><div class="jstat-lbl">Rarity Daily</div></div>
+                </div>
+                <div class="jlinkbar">
+                    <p><strong>Powered by Juice Tech</strong> — the burn infrastructure of the future.</p>
+                    <a href="https://www.drinkjuice.io/" target="_blank" class="btn btn-orange btn-sm">🍊 Visit Juice →</a>
+                </div>
+            </div>
+            <div class="juice-visual">
+                <div class="burn-orb">
+                    <div class="burn-ring"></div>
+                    <div class="burn-ring"></div>
+                    <div class="burn-ring"></div>
+                    <div class="burn-inner">🔥</div>
+                </div>
+            </div>
+        </div>
+        <div class="burn-ticker">
+            <div class="flame">🔥</div>
+            <div class="bt-item"><div class="bt-val">ACTIVE</div><div class="bt-lbl">Burn Status</div></div>
+            <div class="bt-item"><div class="bt-val">EVERY TX</div><div class="bt-lbl">Frequency</div></div>
+            <div class="bt-item"><div class="bt-val">1B→∞↓</div><div class="bt-lbl">Supply Journey</div></div>
+            <div class="bt-item"><div class="bt-val">YOU</div><div class="bt-lbl">The Catalyst</div></div>
+            <div class="flame">🔥</div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     TOKENOMICS
+══════════════════════════════ -->
+<section id="tokenomics" class="section sm">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl">On-chain Data</p>
+            <h2 class="sec-title">Tokenomics</h2>
+        </div>
+        <div class="tok-grid">
+            <div class="tok-card"><div class="tok-icon">🦖</div><div class="tok-name">Total Supply</div><div class="tok-val">1,000,000,000</div></div>
+            <div class="tok-card"><div class="tok-icon">💎</div><div class="tok-name">Liquidity</div><div class="tok-val">100% Locked</div></div>
+            <div class="tok-card"><div class="tok-icon">🔥</div><div class="tok-name">Tax</div><div class="tok-val">0% Buy / Sell</div></div>
+            <div class="tok-card"><div class="tok-icon">🌙</div><div class="tok-name">Contract</div><div class="tok-val">Renounced</div></div>
+            <div class="tok-card" style="border-color:rgba(249,115,22,.25);background:var(--om)">
+                <div class="tok-icon" style="filter:drop-shadow(0 0 10px var(--orange))">🍊</div>
+                <div class="tok-name" style="color:var(--orange)">Burn</div>
+                <div class="tok-val">Juice Tech Active</div>
+            </div>
+            <div class="tok-card"><div class="tok-icon">⚡</div><div class="tok-name">Network</div><div class="tok-val">Solana</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     AI MEME GENERATOR
+══════════════════════════════ -->
+<section id="memes" class="section sa">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl">AI Powered · FAL.ai</p>
+            <h2 class="sec-title">AI Meme Generator</h2>
+            <p class="sec-sub">Describe your vision. Watch the ancients paint it.</p>
+        </div>
+        <div class="meme-grid">
+            <!-- Controls -->
+            <div class="meme-panel">
+                <label class="flabel">Image Prompt</label>
+                <textarea class="ftxt" id="memePrompt" placeholder="A colossal dinosaur rising from prehistoric mist, holding a $REMEMBER banner, cinematic epic fantasy art, golden hour light, hyper-detailed..."></textarea>
+
+                <label class="flabel">Style Preset</label>
+                <div class="style-pills" id="stylePills">
+                    <button class="spill on" onclick="setStyle(this,'')">Custom</button>
+                    <button class="spill" onclick="setStyle(this,'epic fantasy art, 8k, cinematic lighting, dramatic')">Epic Fantasy</button>
+                    <button class="spill" onclick="setStyle(this,'internet meme format, bold impact text, humorous')">Meme</button>
+                    <button class="spill" onclick="setStyle(this,'ancient cave painting, prehistoric, ochre tones')">Ancient</button>
+                    <button class="spill" onclick="setStyle(this,'cyberpunk neon glow, digital glitch art, dark city')">Cyberpunk</button>
+                    <button class="spill" onclick="setStyle(this,'mystical watercolor, soft light, ethereal fog')">Mystical</button>
+                    <button class="spill" onclick="setStyle(this,'dark fantasy oil painting, dramatic shadows, baroque')">Dark Art</button>
+                </div>
+
+                <label class="flabel">Model</label>
+                <select class="fsel" id="falModel">
+                    <option value="fal-ai/flux/schnell">FLUX Schnell — Fast</option>
+                    <option value="fal-ai/flux/dev">FLUX Dev — Higher Quality</option>
+                    <option value="fal-ai/stable-diffusion-xl">SDXL — Classic</option>
+                    <option value="fal-ai/aura-flow">AuraFlow</option>
+                </select>
+
+                <label class="flabel">Aspect Ratio</label>
+                <select class="fsel" id="falRatio">
+                    <option value="square_hd">Square HD (1:1)</option>
+                    <option value="landscape_16_9">Landscape 16:9</option>
+                    <option value="portrait_4_3">Portrait 4:3</option>
+                    <option value="landscape_4_3">Landscape 4:3</option>
+                </select>
+
+                <div class="meme-btns">
+                    <button class="btn" id="genBtn" onclick="generateMeme()">✨ Generate</button>
+                    <button class="btn btn-ghost" id="saveBtn" onclick="saveToVault()" disabled>💾 Save</button>
+                </div>
+
+                <div class="server-note">
+                    <strong>🔒 API key secured on server.</strong> Your FAL_KEY is stored as a Vercel environment variable — never exposed to the browser.
+                </div>
+            </div>
+
+            <!-- Preview -->
+            <div class="meme-preview">
+                <div class="meme-ph" id="memePh">
+                    <div class="meme-ph-icon">🦖</div>
+                    <div class="meme-ph-txt">Your AI artwork will manifest here</div>
+                </div>
+                <div class="meme-loading" id="memeLoading">
+                    <div class="spinner"></div>
+                    <p class="spin-lbl">Awakening the ancients…</p>
+                    <p style="font-size:.8rem;color:rgba(125,211,252,.35);margin-top:.3rem">10–30 seconds</p>
+                </div>
+                <img id="memeImg" alt="AI Generated Meme">
+                <div class="meme-err" id="memeErr"></div>
+                <div class="meme-actions" id="memeActs">
+                    <a id="memeDl" class="btn btn-ghost btn-sm" download="remember-meme.png">⬇ Download</a>
+                    <button class="btn btn-sm" onclick="saveToVault()">💾 Save to Vault</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     MEME VAULT
+══════════════════════════════ -->
+<section id="vault" class="section sm">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl">IndexedDB · Persistent Local Storage</p>
+            <h2 class="sec-title">The Meme Vault</h2>
+            <p class="sec-sub">Your saved creations — stored in your browser's database.</p>
+        </div>
+        <div class="vault-stats">
+            <div class="vstat"><div class="vstat-val" id="stTotal">0</div><div class="vstat-lbl">Memes Saved</div></div>
+            <div class="vstat"><div class="vstat-val" id="stToday">0</div><div class="vstat-lbl">Created Today</div></div>
+        </div>
+        <div class="vault-ctrl">
+            <input type="text" class="vsearch" id="vSearch" placeholder="Search prompts…" oninput="renderVault()">
+            <button class="btn btn-ghost btn-sm" onclick="exportVault()">⬇ Export JSON</button>
+            <button class="btn btn-sm btn-red" onclick="clearVault()">🗑 Clear</button>
+        </div>
+        <div class="vault-grid" id="vGrid">
+            <div class="vault-empty"><div class="vault-empty-icon">🏛</div><p>The vault awaits your first creation.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     ROADMAP
+══════════════════════════════ -->
+<section id="roadmap" class="section sa">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl">The Journey</p>
+            <h2 class="sec-title">The Path Forward</h2>
+        </div>
+        <div class="rm-wrap">
+            <div class="rm-item">
+                <div class="rm-card"><div class="rm-phase">Phase I — Genesis</div><ul><li>Launch $REMEMBER on Solana</li><li>Activate Juice Tech burn mechanism</li><li>Build core community</li><li>CoinGecko &amp; CoinMarketCap listing</li></ul></div>
+                <div class="rm-dot"></div>
+            </div>
+            <div class="rm-item">
+                <div class="rm-card"><div class="rm-phase">Phase II — Ascension</div><ul><li>Strategic partnerships</li><li>Marketing campaign launch</li><li>Community growth initiatives</li><li>First CEX listings</li></ul></div>
+                <div class="rm-dot"></div>
+            </div>
+            <div class="rm-item">
+                <div class="rm-card"><div class="rm-phase">Phase III — Dominion</div><ul><li>Major exchange listings</li><li>NFT collection launch</li><li>Expanded Juice burn tiers</li><li>Global marketing push</li></ul></div>
+                <div class="rm-dot"></div>
+            </div>
+            <div class="rm-item">
+                <div class="rm-card"><div class="rm-phase">Phase IV — Legacy</div><ul><li>DAO governance launch</li><li>Ecosystem expansion</li><li>Cross-chain bridges</li><li>The Remember Foundation</li></ul></div>
+                <div class="rm-dot"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     LORE (EXTRA TABS)
+══════════════════════════════ -->
+<section id="lore" class="section sm">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl">🦕 Sacred Texts</p>
+            <h2 class="sec-title">Lore &amp; Knowledge</h2>
+            <p class="sec-sub">Everything you need to know. Written in the stars.</p>
+        </div>
+        <div class="lore-tabs">
+            <button class="ltab on" onclick="loreTab(this,'origin')">The Origin</button>
+            <button class="ltab" onclick="loreTab(this,'buy')">How to Buy</button>
+            <button class="ltab" onclick="loreTab(this,'juiceexp')">Juice Explained</button>
+            <button class="ltab" onclick="loreTab(this,'faq')">FAQ</button>
+        </div>
+
+        <!-- ORIGIN -->
+        <div class="lpanel on" id="lore-origin">
+            <div class="lore">
+                <h3>The Ancient Prophecy</h3>
+                <p>Before markets existed, before charts were drawn, the ancient ones knew: memory is power. The dinosaur does not forget what it is. The whale does not forget its depth. Yet man — the most capable creature — forgets his nature daily.</p>
+                <div class="pullq">"Remember who you are. Not what the world has made you."</div>
+                <p>$REMEMBER was born from this truth. A token that serves as a daily reminder: you are more than your current position. You are ancient. You are powerful. You are worthy of ascension.</p>
+                <h3>The Dinosaur Symbol</h3>
+                <p>We chose the dinosaur not for comedy — but for meaning. These creatures dominated Earth for 165 million years. Their legacy lives in every fossil, every museum, every child's imagination. They are <em>remembered</em>. That is our goal — to become so powerful, so ingrained in this space, that we are impossible to forget.</p>
+                <div class="facts">
+                    <div class="fact"><div class="fact-v">165M</div><div class="fact-k">Years Dinosaurs Ruled</div></div>
+                    <div class="fact"><div class="fact-v">∞</div><div class="fact-k">Years We'll Be Remembered</div></div>
+                    <div class="fact"><div class="fact-v">1B</div><div class="fact-k">Starting Supply</div></div>
+                    <div class="fact"><div class="fact-v">↓∞</div><div class="fact-k">Burning Forever</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOW TO BUY -->
+        <div class="lpanel" id="lore-buy">
+            <div class="lore">
+                <h3>Your Path to Remembrance</h3>
+                <p>Joining the herd takes only minutes. Follow these steps to claim your ancient power.</p>
+                <div class="how-grid" style="margin:2.5rem 0">
+                    <div class="how-step"><div class="how-n">01</div><div class="how-t">Get a Wallet</div><div class="how-d">Download Phantom or Solflare. Save your seed phrase offline — never digitally.</div></div>
+                    <div class="how-step"><div class="how-n">02</div><div class="how-t">Get SOL</div><div class="how-d">Buy SOL on Coinbase, Kraken, or Binance. Transfer to your Phantom wallet.</div></div>
+                    <div class="how-step"><div class="how-n">03</div><div class="how-t">Go to Jupiter</div><div class="how-d">Visit jup.ag — Solana's premier DEX aggregator. Connect your wallet.</div></div>
+                    <div class="how-step"><div class="how-n">04</div><div class="how-t">Paste CA</div><div class="how-d" style="word-break:break-all;font-size:.85rem;color:rgba(125,211,252,.6);font-family:'Courier New',monospace">CYfwS1vQfMtJgU8woviDXKhqPPkzoNzRxrPGQiRHpump</div></div>
+                    <div class="how-step"><div class="how-n">05</div><div class="how-t">Swap &amp; Remember</div><div class="how-d">Swap SOL for $REMEMBER. Set slippage 1–3%. Welcome to the herd.</div></div>
+                </div>
+                <p style="text-align:center;color:rgba(125,211,252,.35);font-size:.95rem">Always verify the CA. Never buy from unofficial links. DYOR.</p>
+            </div>
+        </div>
+
+        <!-- JUICE EXPLAINED -->
+        <div class="lpanel" id="lore-juiceexp">
+            <div class="lore">
+                <h3>What Is Juice Tech?</h3>
+                <p>Juice Tech is a next-generation burn protocol built on Solana. It acts as the engine connecting trading volume to deflationary pressure — automatically routing fees into a burn wallet that permanently removes tokens from circulation.</p>
+                <div class="pullq" style="border-color:var(--orange);color:var(--orange)">"Every buy. Every sell. Every swap. All roads lead to the fire."</div>
+                <h3>How the $REMEMBER Burn Works</h3>
+                <p>When traders buy or sell $REMEMBER, the volume fees generated are automatically directed through Juice Tech and used to purchase and burn $REMEMBER tokens on-chain. Every trade reduces the total supply — permanently.</p>
+                <p>This creates a flywheel: <strong style="color:var(--orange)">more volume → more burns → lower supply → higher scarcity → higher value → more holders → more volume.</strong></p>
+                <h3>Why Juice?</h3>
+                <p>Juice Tech was chosen for their transparent, fully on-chain infrastructure. Every burn is publicly verifiable on the Solana blockchain — no trust required, only math.</p>
+                <div style="text-align:center;margin-top:2.5rem">
+                    <a href="https://www.drinkjuice.io/" target="_blank" class="btn btn-orange">🍊 Visit Juice Tech →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="lpanel" id="lore-faq">
+            <div class="lore">
+                <h3>Frequently Asked Questions</h3>
+                <div class="faq-item"><p class="faq-q">Is $REMEMBER a rug pull?</p><p class="faq-a">No. Liquidity is 100% locked and the contract is renounced. No dev can drain the pool or modify the contract. Verify on-chain anytime.</p></div>
+                <div class="faq-item"><p class="faq-q">Why 0% tax?</p><p class="faq-a">We believe in frictionless trading. 0% means every swap goes directly to you. The burn mechanism is funded through Juice Tech's infrastructure — not taken from traders.</p></div>
+                <div class="faq-item"><p class="faq-q">How does the Juice burn work exactly?</p><p class="faq-a">Volume fees are channeled through Juice Tech and used to buy and burn $REMEMBER tokens on-chain. Each burn event is publicly verifiable on Solana. Follow our X community for burn announcements.</p></div>
+                <div class="faq-item"><p class="faq-q">Where can I track the price?</p><p class="faq-a">Search our CA on Dexscreener, Dextools, or Birdeye. CA: CYfwS1vQfMtJgU8woviDXKhqPPkzoNzRxrPGQiRHpump</p></div>
+                <div class="faq-item"><p class="faq-q">What slippage should I use?</p><p class="faq-a">With 0% tax, 1–2% slippage is usually enough. If transactions fail, try 3–5%.</p></div>
+                <div class="faq-item"><p class="faq-q">How is the AI meme generator secured?</p><p class="faq-a">The FAL.ai API key is stored as a Vercel environment variable — it never touches your browser. The site calls our own <code style="color:var(--primary)">/api/generate</code> endpoint which proxies to FAL.ai server-side.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     COMMUNITY
+══════════════════════════════ -->
+<section id="community" class="section sa">
+    <div class="container">
+        <div class="sec-hd">
+            <p class="sec-lbl">Rise Together</p>
+            <h2 class="sec-title">Join The Herd</h2>
+            <p class="sec-sub">The ancients did not ascend alone. Neither shall we.</p>
+        </div>
+        <div class="soc-grid">
+            <a href="https://x.com/i/communities/2025009364206322044" target="_blank" class="soc-link">
+                <span class="soc-icon">𝕏</span><span class="soc-name">X Community</span><span class="soc-desc">Official $REMEMBER hub</span>
+            </a>
+            <a href="#" class="soc-link">
+                <span class="soc-icon">💬</span><span class="soc-name">Telegram</span><span class="soc-desc">Real-time chat &amp; updates</span>
+            </a>
+            <a href="#" class="soc-link">
+                <span class="soc-icon">🎮</span><span class="soc-name">Discord</span><span class="soc-desc">Coming soon</span>
+            </a>
+            <a href="#" class="soc-link">
+                <span class="soc-icon">📊</span><span class="soc-name">Dexscreener</span><span class="soc-desc">Track price &amp; volume</span>
+            </a>
+            <a href="https://www.drinkjuice.io/" target="_blank" class="soc-link jlink">
+                <span class="soc-icon">🍊</span><span class="soc-name">Juice Tech</span><span class="soc-desc">Our burn partner</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer>
+    <div class="container">
+        <div class="ft-logo">$REMEMBER WHO YOU ARE</div>
+        <div class="ft-ca">CA: CYfwS1vQfMtJgU8woviDXKhqPPkzoNzRxrPGQiRHpump</div>
+        <div class="ft-links">
+            <a href="#about">About</a><a href="#juice">Juice Burn</a><a href="#tokenomics">Tokenomics</a>
+            <a href="#memes">AI Memes</a><a href="#lore">Lore</a>
+            <a href="https://x.com/i/communities/2025009364206322044" target="_blank">X Community</a>
+            <a href="https://www.drinkjuice.io/" target="_blank">Juice Tech</a>
+        </div>
+        <p class="ft-disc">$REMEMBER is a meme coin with no intrinsic value or expectation of financial return. This is not financial advice. Cryptocurrency is highly volatile — only invest what you can afford to lose. Always do your own research.</p>
+        <p class="ft-juice">Burn powered by <a href="https://www.drinkjuice.io/" target="_blank">🍊 Juice Tech</a> &nbsp;·&nbsp; Built on Solana &nbsp;·&nbsp; $REMEMBER 2025</p>
+    </div>
+</footer>
+
+<script>
+'use strict';
+
+/* ── PARTICLES ── */
+(()=>{const c=document.getElementById('particles');for(let i=0;i<35;i++){const p=document.createElement('div');p.className='particle';p.style.cssText=`left:${Math.random()*100}%;animation-duration:${12+Math.random()*14}s;animation-delay:${Math.random()*14}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;c.appendChild(p);}})();
+
+/* ── MOUSE GLOW ── */
+let mx=0,my=0,g1x=0,g1y=0,g2x=0,g2y=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function gl(){g1x+=(mx-g1x)*.04;g1y+=(my-g1y)*.04;g2x+=(mx-g2x)*.025;g2y+=(my-g2y)*.025;const a=document.getElementById('g1'),b=document.getElementById('g2');if(a){a.style.left=(g1x-200)+'px';a.style.top=(g1y-200)+'px';}if(b){b.style.left=(g2x-200)+'px';b.style.top=(g2y-200)+'px';}requestAnimationFrame(gl);})();
+
+/* ── NAV ── */
+const navEl=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+    navEl.classList.toggle('scrolled',window.scrollY>40);
+    const v=document.getElementById('hv');
+    if(v)v.style.transform=`scale(1.08) translateY(${window.scrollY*.12}px)`;
+});
+document.getElementById('hbg').addEventListener('click',()=>document.getElementById('mm').classList.toggle('open'));
+document.querySelectorAll('.ml').forEach(a=>a.addEventListener('click',()=>document.getElementById('mm').classList.remove('open')));
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){const t=document.querySelector(this.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+
+/* ── REVEAL ── */
+const ro=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';ro.unobserve(e.target);}});},{threshold:.08,rootMargin:'0px 0px -60px 0px'});
+document.querySelectorAll('.tok-card,.rm-card,.soc-link,.jstat,.how-step,.faq-item,.fact').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(22px)';el.style.transition='opacity .6s ease,transform .6s ease';ro.observe(el);});
+
+/* ── TOAST ── */
+let tt;
+function toast(msg,t=''){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(t?' t'+t:'');clearTimeout(tt);tt=setTimeout(()=>el.className='toast',3200);}
+
+/* ── CA COPY ── */
+function copyCA(){
+    navigator.clipboard.writeText('CYfwS1vQfMtJgU8woviDXKhqPPkzoNzRxrPGQiRHpump').then(()=>{
+        document.getElementById('caHint').style.display='none';
+        document.getElementById('caOk').style.display='block';
+        toast('✓ Contract address copied!','ok');
+        setTimeout(()=>{document.getElementById('caHint').style.display='block';document.getElementById('caOk').style.display='none';},3000);
+    }).catch(()=>toast('Copy failed','err'));
+}
+
+/* ── LORE TABS ── */
+function loreTab(btn,id){
+    document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('on'));
+    document.querySelectorAll('.lpanel').forEach(p=>p.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('lore-'+id).classList.add('on');
+}
+
+/* ══════════════════════════════════
+   INDEXEDDB BACKEND
+══════════════════════════════════ */
+const DBN='RememberVaultDB',DBV=1,ST='memes';
+let db=null;
+function initDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DBN,DBV);r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(ST)){const s=d.createObjectStore(ST,{keyPath:'id',autoIncrement:true});s.createIndex('createdAt','createdAt');}};r.onsuccess=e=>{db=e.target.result;res(db);};r.onerror=e=>rej(e.target.error);});}
+function dbAdd(rec){return new Promise((res,rej)=>{const r=db.transaction(ST,'readwrite').objectStore(ST).add(rec);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+function dbAll(){return new Promise((res,rej)=>{const r=db.transaction(ST,'readonly').objectStore(ST).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+function dbDel(id){return new Promise((res,rej)=>{const r=db.transaction(ST,'readwrite').objectStore(ST).delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
+function dbClr(){return new Promise((res,rej)=>{const r=db.transaction(ST,'readwrite').objectStore(ST).clear();r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
+
+/* ══════════════════════════════════
+   AI MEME GENERATOR
+   Calls /api/generate — FAL_KEY is
+   stored in Vercel env, never exposed
+══════════════════════════════════ */
+let styleSfx='',lastUrl='',lastPrompt='';
+
+function setStyle(btn,sfx){document.querySelectorAll('.spill').forEach(p=>p.classList.remove('on'));btn.classList.add('on');styleSfx=sfx;}
+
+function uiState(s){
+    document.getElementById('memePh').style.display=s==='empty'?'block':'none';
+    document.getElementById('memeLoading').style.display=s==='loading'?'flex':'none';
+    document.getElementById('memeImg').style.display=s==='done'?'block':'none';
+    document.getElementById('memeActs').style.display=s==='done'?'flex':'none';
+    document.getElementById('memeErr').style.display=s==='err'?'block':'none';
+    document.getElementById('genBtn').disabled=s==='loading';
+}
+
+async function generateMeme(){
+    const raw=document.getElementById('memePrompt').value.trim();
+    const model=document.getElementById('falModel').value;
+    const ratio=document.getElementById('falRatio').value;
+    if(!raw){toast('Describe the image you want','err');return;}
+
+    const prompt=raw+(styleSfx?', '+styleSfx:'')+', high quality, detailed, vivid';
+    uiState('loading');
+    document.getElementById('saveBtn').disabled=true;
+
+    try{
+        // ✅ Calls our own Vercel serverless function — FAL_KEY never leaves server
+        const res=await fetch('/api/generate',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+                prompt,
+                model,
+                image_size:ratio,
+                num_inference_steps:model.includes('schnell')?4:28
+            })
+        });
+
+        const data=await res.json();
+
+        if(!res.ok){
+            throw new Error(data.error||'Server error: '+res.status);
+        }
+
+        // Parse image URL from FAL response
+        let url=null;
+        if(data.images?.[0]) url=data.images[0].url||data.images[0];
+        else if(data.image?.url) url=data.image.url;
+        else if(data.output?.images?.[0]) url=data.output.images[0].url||data.output.images[0];
+        if(!url) throw new Error('No image returned. Try a different model or prompt.');
+
+        lastUrl=url; lastPrompt=raw;
+        const img=document.getElementById('memeImg');
+        img.onload=()=>{
+            uiState('done');
+            document.getElementById('memeDl').href=url;
+            document.getElementById('saveBtn').disabled=false;
+            toast('✨ Meme forged!','ok');
+        };
+        img.onerror=()=>{ throw new Error('Image failed to load'); };
+        img.src=url;
+
+    }catch(err){
+        uiState('err');
+        document.getElementById('memeErr').textContent='⚠ '+err.message;
+        toast('Generation failed','err');
+        document.getElementById('genBtn').disabled=false;
+    }
+}
+
+async function saveToVault(){
+    if(!lastUrl){toast('Generate an image first','err');return;}
+    try{
+        await dbAdd({url:lastUrl,prompt:lastPrompt,model:document.getElementById('falModel').value,createdAt:new Date().toISOString()});
+        toast('💾 Saved to the Vault!','ok');
+        renderVault();
+    }catch(e){toast('Save failed: '+e.message,'err');}
+}
+
+/* ── VAULT ── */
+async function renderVault(){
+    const q=(document.getElementById('vSearch').value||'').toLowerCase();
+    let recs=await dbAll();
+    const today=new Date().toDateString();
+    document.getElementById('stTotal').textContent=recs.length;
+    document.getElementById('stToday').textContent=recs.filter(r=>new Date(r.createdAt).toDateString()===today).length;
+    if(q)recs=recs.filter(r=>r.prompt.toLowerCase().includes(q));
+    const g=document.getElementById('vGrid');
+    if(!recs.length){g.innerHTML=`<div class="vault-empty"><div class="vault-empty-icon">🏛</div><p>${q?'No memes match your search.':'The vault awaits your first creation.'}</p></div>`;return;}
+    g.innerHTML='';
+    [...recs].reverse().forEach(r=>{
+        const c=document.createElement('div');c.className='vcard';
+        c.style.cssText='opacity:0;transform:translateY(20px);transition:opacity .5s,transform .5s';
+        c.innerHTML=`<img src="${x(r.url)}" alt="" loading="lazy"><div class="vcard-body"><div class="vcard-prompt">${x(r.prompt)}</div><div class="vcard-meta">${new Date(r.createdAt).toLocaleString()}</div><div class="vcard-acts"><a href="${x(r.url)}" target="_blank" class="vbtn vbtn-open">Open</a><button class="vbtn vbtn-del" onclick="delM(${r.id})">Delete</button></div></div>`;
+        g.appendChild(c);
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{c.style.opacity='1';c.style.transform='translateY(0)';}));
+    });
+}
+async function delM(id){await dbDel(id);toast('Removed');renderVault();}
+async function clearVault(){if(!confirm('Clear ALL memes?'))return;await dbClr();toast('Vault cleared');renderVault();}
+async function exportVault(){
+    const r=await dbAll();if(!r.length){toast('Vault is empty','err');return;}
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(r,null,2)],{type:'application/json'}));a.download='remember-vault.json';a.click();toast('Exported!','ok');
+}
+function x(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ── INIT ── */
+(async()=>{await initDB();await renderVault();})();
+</script>
+</body>
+</html>
