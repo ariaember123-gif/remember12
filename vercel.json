@@ -1,23 +1,25 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/api/generate",
+      "dest": "/api/generate.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "/$1"
     }
   ]
 }
+```
+
+No `builds` needed — Vercel auto-detects static files and Node.js functions in `/api/`.
+
+**Option B: Restructure your project to match the config**
+```
+your-project/
+├── vercel.json
+├── public/
+│   └── index.html      ← move index.html here
+└── api/
+    └── generate.js     ← move generate.js here
